@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-VERSION="0.2"
+VERSION="0.25"
 
 log.info "===================================================================="
 log.info "GATK4 Best Practice Nextflow Pipeline (v${VERSION})                        "
@@ -11,7 +11,7 @@ if (params.help) {
   log.info " "
   log.info "USAGE: "
   log.info " "
-  log.info "nextflow run oliverSI/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz"
+  log.info "nextflow run Biocentric/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz"
   log.info " "
   log.info "Mandatory arguments:"
   log.info "    --fastq1        FILE               Fastq(.gz) file for read1"
@@ -149,14 +149,14 @@ process BWA {
 	file 'aln-pe.sam' into samfile
 	
 	"""
-	bwa mem -M -R '@RG\\tID:${params.rg}\\tSM:${params.samplename}\\tPL:Illumina' $reference $fastq1 $fastq2 > aln-pe.sam
+	bwa mem -M -t 20 -R '@RG\\tID:${params.rg}\\tSM:${params.samplename}\\tPL:Illumina' $reference $fastq1 $fastq2 > aln-pe.sam
 	"""
 		
 }
 
 process BWA_sort {
 	publishDir "${params.outdir}/MappedRead"
-	container 'comics/samtools:latest'
+	container 'mgibio/samtools:1.9'
 	
 	input:
 	file samfile
@@ -165,7 +165,7 @@ process BWA_sort {
 	file 'aln-pe-sorted.bam' into bam_sort
 
 	"""
-	samtools sort -o aln-pe-sorted.bam -O BAM $samfile
+	samtools sort -@ 20 -o aln-pe-sorted.bam -O BAM $samfile
 	"""
 
 }
@@ -298,10 +298,10 @@ process VariantRecalibrator_SNPs {
 	gatk VariantRecalibrator \
 	-V $haplotypecaller_vcf \
  	-R $reference \
-	-resource hapmap,known=false,training=true,truth=true,prior=15.0:./$hapmap \
-	-resource omni,known=false,training=true,truth=true,prior=12.0:./$omni \
-    	-resource 1000G,known=false,training=true,truth=false,prior=10.0:./$phase1_snps \
-    	-resource dbsnp,known=true,training=false,truth=false,prior=2.0:./$dbsnp \
+	--resource:hapmap,known=false,training=true,truth=true,prior=15.0 ./$hapmap \
+	--resource:omni,known=false,training=true,truth=true,prior=12.0 ./$omni \
+    	--resource:1000G,known=false,training=true,truth=false,prior=10.0 ./$phase1_snps \
+    	--resource:dbsnp,known=true,training=false,truth=false,prior=2.0 ./$dbsnp \
 	-an DP \
     	-an QD \
 	-an FS \
@@ -370,8 +370,8 @@ process VariantRecalibrator_INDELs {
 	gatk VariantRecalibrator \
 	-V $recalibrated_snps_raw_indels \
  	-R $reference \
-	--resource mills,known=false,training=true,truth=true,prior=12.0:./$golden_indel \
-    	--resource dbsnp,known=true,training=false,truth=false,prior=2.0:./$dbsnp \
+	--resource:mills,known=false,training=true,truth=true,prior=12.0 ./$golden_indel \
+    	--resource:dbsnp,known=true,training=false,truth=false,prior=2.0 ./$dbsnp \
 	-an QD \
     	-an DP \
     	-an FS \

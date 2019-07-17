@@ -1,5 +1,6 @@
 # GATK4 Best Practice Nextflow Pipeline
-**GATK4 Best Practice Nextflow Pipeline** is a variant calling pipeline for human whole genome sequencing based on the [GATK best practice](https://software.broadinstitute.org/gatk/best-practices/workflow).
+**GATK4 Best Practice Nextflow Pipeline** is a variant calling pipeline for human whole genome sequencing based on the [GATK best practice](https://software.broadinstitute.org/gatk/best-practices/workflow). 
+This version is updated to work with GATK4.1 and performs multithreaded BWA and Samtools excecutions
 
 ## Requirements
 * <a href="https://www.nextflow.io/">NextFlow</a>
@@ -9,13 +10,11 @@
 ## Running the pipeline
 There is no need to download the code explicitly. Nextflow seamlessly intergrates with GitHub with the following command.
   ```
-  nextflow run oliverSI/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz
+  nextflow run Biocentric/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz
   ```
   ```
-  N E X T F L O W  ~  version 0.25.6
-Launching `main.nf` [cheesy_roentgen] - revision: 2ba478ba4b
 ====================================================================
-GATK4 Best Practice Nextflow Pipeline (v0.1)                        
+GATK4 Best Practice Nextflow Pipeline (v0.25)                        
 ====================================================================
 [warm up] executor > local
 [89/1d86be] Submitted process > get_phase1_SNPs
@@ -42,18 +41,15 @@ Reference sequences(GRCh37/hg19) are automatically imported form [Docker Hub](ht
 
 ## Pipeline parameters
 ```
-nextflow run oliverSI/GATK4_Best_Practice --help
+nextflow run Biocentric/GATK4_Best_Practice --help
 ```
-```
-N E X T F L O W  ~  version 0.25.5
-Launching `main.nf` [silly_baekeland] - revision: 82d1c9f7ca
 ====================================================================
-GATK4 Best Practice Nextflow Pipeline (v0.1)                        
+GATK4 Best Practice Nextflow Pipeline (v0.25)                        
 ====================================================================
  
 USAGE: 
  
-nextflow run oliverSI/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz
+nextflow run Biocentric/GATK4_Best_Practice --fastq1 read_R1.fastq.gz --fastq2 read_R2.fastq.gz
  
 Mandatory arguments:
     --fastq1        FILE               Fastq(.gz) file for read1
