@@ -137,7 +137,7 @@ process get_BWA_index {
 
 process BWA {
 	publishDir "${params.outdir}/MappedRead"
-	container 'kathrinklee/bwa:latest'
+	container 'dukegcb/bwa-samtools'
 
 	input:
 	file reference
@@ -146,10 +146,10 @@ process BWA {
 	file fastq2
 
 	output:
-	file 'aln-pe.sam' into samfile
+	file 'aln-pe.bam' into samfile
 	
 	"""
-	bwa mem -M -t 20 -R '@RG\\tID:${params.rg}\\tSM:${params.samplename}\\tPL:Illumina' $reference $fastq1 $fastq2 > aln-pe.sam
+	bwa mem -M -t 19 -R '@RG\\tID:${params.rg}\\tSM:${params.samplename}\\tPL:Illumina' $reference $fastq1 $fastq2 | samtools view -bS - > aln-pe.bam
 	"""
 		
 }
@@ -165,7 +165,7 @@ process BWA_sort {
 	file 'aln-pe-sorted.bam' into bam_sort
 
 	"""
-	samtools sort -@ 20 -o aln-pe-sorted.bam -O BAM $samfile
+	samtools sort -T temp -@ 10 -m 2G -o aln-pe-sorted.bam -O BAM $samfile
 	"""
 
 }
