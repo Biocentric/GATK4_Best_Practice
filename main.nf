@@ -181,7 +181,7 @@ process MarkDuplicates {
 	file 'aln-pe_MarkDup.bam' into bam_markdup
 
 	"""
-	gatk MarkDuplicates -I $bam_sort -M metrics.txt -O aln-pe_MarkDup.bam	
+	gatk MarkDuplicates -I $bam_sort -M metrics.txt --TMP_DIR=${params.outdir}/tmp -O aln-pe_MarkDup.bam	
 	"""
 
 }
