@@ -249,6 +249,24 @@ process HaplotypeCaller {
 	"""
 }
 
+process HaplotypeGVCF {
+	publishDir "${params.outdir}/HaplotypeCaller"
+	container 'broadinstitute/gatk:latest'
+	
+	input:
+	file reference
+	file reference_fai
+	file reference_dict
+	file bam_bqsr
+
+	output:
+		
+	script:
+	"""
+	gatk HaplotypeCaller -I $bam_bqsr -O haplotypecaller.gvcf --emit-ref-confidence BP_RESOLUTION -R $reference
+	"""
+}
+
 process GenotypeGVCFs {
 	publishDir "${params.outdir}/HaplotypeCaller"
 	container 'broadinstitute/gatk:latest'
