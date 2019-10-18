@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-VERSION="0.25"
+VERSION="0.30"
 
 log.info "===================================================================="
 log.info "GATK4 Best Practice Nextflow Pipeline (v${VERSION})                        "
@@ -35,103 +35,104 @@ params.rg = fastq1.baseName
 
 process get_reference {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 	
 	output:
-	file "ucsc.hg19.fasta" into reference
-	file "ucsc.hg19.dict" into reference_dict
-	file "ucsc.hg19.fasta.fai" into reference_fai
+	file "Homo_sapiens_assembly38.fasta" into reference
+	file "Homo_sapiens_assembly38.dict" into reference_dict
+	file "Homo_sapiens_assembly38.fasta.fai" into reference_fai
 	
 	"""
-	gunzip -dc /data/ucsc.hg19.fasta.gz > ucsc.hg19.fasta
-	gunzip -dc /data/ucsc.hg19.dict.gz > ucsc.hg19.dict
-	gunzip -dc /data/ucsc.hg19.fasta.fai.gz > ucsc.hg19.fasta.fai
+	gunzip -dc /data/Homo_sapiens_assembly38.fasta.gz > Homo_sapiens_assembly38.fasta
+  gunzip -dc /data/Homo_sapiens_assembly38.dict.gz > Homo_sapiens_assembly38.dict
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.fai.gz > Homo_sapiens_assembly38.fasta.fai
 	"""
 }
 
 process get_dbSNP {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	file "dbsnp_138.hg19.vcf" into dbsnp
-	file "dbsnp_138.hg19.vcf.idx" into dbsnp_idx
+	file "Homo_sapiens_assembly38.dbsnp138.vcf" into dbsnp
+	file "Homo_sapiens_assembly38.dbsnp138.vcf.idx" into dbsnp_idx
 
 	"""
-	gunzip -dc /data/dbsnp_138.hg19.vcf.gz > dbsnp_138.hg19.vcf
-	gunzip -dc /data/dbsnp_138.hg19.vcf.idx.gz > dbsnp_138.hg19.vcf.idx
+	gunzip -dc /data/Homo_sapiens_assembly38.dbsnp138.vcf.gz > Homo_sapiens_assembly38.dbsnp138.vcf
+  gunzip -dc /data/Homo_sapiens_assembly38.dbsnp138.vcf.idx.gz > Homo_sapiens_assembly38.dbsnp138.vcf.idx
 	"""
 }
 
 process get_golden_indel {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	file "Mills_and_1000G_gold_standard.indels.hg19.sites.vcf" into golden_indel
-	file "Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.idx" into golden_indel_idx
+	file "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz" into golden_indel
+	file "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi" into golden_indel_idx
 
 	"""
-	gunzip -dc /data/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz > Mills_and_1000G_gold_standard.indels.hg19.sites.vcf
-	gunzip -dc /data/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.idx.gz > Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.idx
+	cp /data/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz ./Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+  gunzip -dc /data/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi.gz > Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi
 	"""
 }
 
 process get_hapmap {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	file "hapmap_3.3.hg19.sites.vcf" into hapmap
-	file "hapmap_3.3.hg19.sites.vcf.idx" into hapmap_idx
+	file "hapmap_3.3.hg38.vcf.gz" into hapmap
+	file "hapmap_3.3.hg38.vcf.gz.tbi" into hapmap_idx
 
 	"""
-	gunzip -dc /data/hapmap_3.3.hg19.sites.vcf.gz > hapmap_3.3.hg19.sites.vcf
-	gunzip -dc /data/hapmap_3.3.hg19.sites.vcf.idx.gz > hapmap_3.3.hg19.sites.vcf.idx
+	cp /data/hapmap_3.3.hg38.vcf.gz ./hapmap_3.3.hg38.vcf.gz
+  gunzip -dc /data/hapmap_3.3.hg38.vcf.gz.tbi.gz > hapmap_3.3.hg38.vcf.gz.tbi
 	"""
 }
 
 process get_omni {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	file "1000G_omni2.5.hg19.sites.vcf" into omni
-	file "1000G_omni2.5.hg19.sites.vcf.idx" into omni_idx
+	file "1000G_omni2.5.hg38.vcf.gz" into omni
+	file "1000G_omni2.5.hg38.vcf.gz.tbi" into omni_idx
 
 	"""
-	gunzip -dc /data/1000G_omni2.5.hg19.sites.vcf.gz > 1000G_omni2.5.hg19.sites.vcf
-	gunzip -dc /data/1000G_omni2.5.hg19.sites.vcf.idx.gz > 1000G_omni2.5.hg19.sites.vcf.idx
+	cp /data/1000G_omni2.5.hg38.vcf.gz ./1000G_omni2.5.hg38.vcf.gz
+  gunzip -dc /data/1000G_omni2.5.hg38.vcf.gz.tbi > 1000G_omni2.5.hg38.vcf.gz.tbi
 	"""
 }
 
 process get_phase1_SNPs {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	file "1000G_phase1.snps.high_confidence.hg19.sites.vcf" into phase1_snps
-	file "1000G_phase1.snps.high_confidence.hg19.sites.vcf.idx" into phase1_snps_idx
+	file "1000G_phase1.snps.high_confidence.hg38.vcf.gz" into phase1_snps
+	file "1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi" into phase1_snps_idx
 
 	"""
-	gunzip -dc /data/1000G_phase1.snps.high_confidence.hg19.sites.vcf.gz > 1000G_phase1.snps.high_confidence.hg19.sites.vcf
-	gunzip -dc /data/1000G_phase1.snps.high_confidence.hg19.sites.vcf.idx.gz > 1000G_phase1.snps.high_confidence.hg19.sites.vcf.idx
+	cp /data/1000G_phase1.snps.high_confidence.hg38.vcf.gz ./1000G_phase1.snps.high_confidence.hg38.vcf.gz
+  gunzip -dc /data/1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi.gz > 1000G_phase1.snps.high_confidence.hg38.vcf.gz.tbi
 	"""
 }
 
 process get_BWA_index {
 	publishDir "${params.outdir}/reference"
-	container 'oliversi/hg19'
+	container 'biocentric/hg38-gatk4'
 
 	output:
-	set "ucsc.hg19.fasta.amb", "ucsc.hg19.fasta.ann", "ucsc.hg19.fasta.bwt", "ucsc.hg19.fasta.pac", "ucsc.hg19.fasta.sa" into bwa_index
+	set "Homo_sapiens_assembly38.fasta.64.alt", "Homo_sapiens_assembly38.fasta.64.amb", "Homo_sapiens_assembly38.fasta.64.ann", "Homo_sapiens_assembly38.fasta.64.bwt", "Homo_sapiens_assembly38.fasta.64.pac", "Homo_sapiens_assembly38.fasta.64.sa" into bwa_index
 
 	"""
-	gunzip -dc /data/ucsc.hg19.fasta.amb.gz > ucsc.hg19.fasta.amb
-	gunzip -dc /data/ucsc.hg19.fasta.ann.gz > ucsc.hg19.fasta.ann
-	gunzip -dc /data/ucsc.hg19.fasta.bwt.gz > ucsc.hg19.fasta.bwt
-	gunzip -dc /data/ucsc.hg19.fasta.pac.gz > ucsc.hg19.fasta.pac
-	gunzip -dc /data/ucsc.hg19.fasta.sa.gz > ucsc.hg19.fasta.sa
+	gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.alt.gz > Homo_sapiens_assembly38.fasta.64.alt
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.amb.gz > Homo_sapiens_assembly38.fasta.64.amb
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.ann.gz > Homo_sapiens_assembly38.fasta.64.ann
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.bwt.gz > Homo_sapiens_assembly38.fasta.64.bwt
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.pac.gz > Homo_sapiens_assembly38.fasta.64.pac
+  gunzip -dc /data/Homo_sapiens_assembly38.fasta.64.sa.gz > Homo_sapiens_assembly38.fasta.64.sa
 	"""
 }
 

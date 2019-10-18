@@ -1,6 +1,6 @@
 # GATK4 Best Practice Nextflow Pipeline
 **GATK4 Best Practice Nextflow Pipeline** is a variant calling pipeline for human whole genome sequencing based on the [GATK best practice](https://software.broadinstitute.org/gatk/best-practices/workflow). 
-This version is updated to work with GATK4.1 and performs multithreaded BWA and Samtools excecutions
+This version is updated to work with GATK4.1 and performs multithreaded BWA and Samtools excecutions. Furthermore, this branch is focused on de HG38 reference and annotation
 
 ## Requirements
 * <a href="https://www.nextflow.io/">NextFlow</a>
@@ -14,7 +14,7 @@ There is no need to download the code explicitly. Nextflow seamlessly intergrate
   ```
   ```
 ====================================================================
-GATK4 Best Practice Nextflow Pipeline (v0.25)                        
+GATK4 Best Practice Nextflow Pipeline (v0.30)                        
 ====================================================================
 [warm up] executor > local
 [89/1d86be] Submitted process > get_phase1_SNPs
@@ -37,14 +37,14 @@ GATK4 Best Practice Nextflow Pipeline (v0.25)
 [29/98dfcd] Submitted process > ApplyVQSR_INDELs
 [3b/7de781] Submitted process > copy
 ```
-Reference sequences(GRCh37/hg19) are automatically imported form [Docker Hub](https://hub.docker.com/r/oliversi/hg19/).
+Reference sequences(GRCh38) are automatically imported form [Docker Hub](https://hub.docker.com/r/biocentric/hg38-gatk4).
 
 ## Pipeline parameters
 ```
 nextflow run Biocentric/GATK4_Best_Practice --help
 ```
 ====================================================================
-GATK4 Best Practice Nextflow Pipeline (v0.25)                        
+GATK4 Best Practice Nextflow Pipeline (v0.30)                        
 ====================================================================
  
 USAGE: 
